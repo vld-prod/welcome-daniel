@@ -1,6 +1,14 @@
 {
-  "extends": ["html-validate:recommended"],
+  "extends": [
+    "html-validate:recommended"
+  ],
   "rules": {
-    "void-style": ["error", { "style": "selfclose" }]
+    "void-style": [
+      "error",
+      {
+        "style": "selfclose"
+      }
+    ],
+    "doctype-style": "off"
   }
 }
