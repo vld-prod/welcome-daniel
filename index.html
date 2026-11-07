@@ -141,36 +141,61 @@
       font-weight: 700; white-space: nowrap;
     }
 
-    .gallery {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.1rem; position: relative;
+    .gallery-shell { text-align: center; }
+    .carousel {
+      position: relative; border-radius: 30px; padding: 1rem;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden;
     }
-    .gallery::before {
-      content: ""; grid-column: 1 / -1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-      margin-bottom: .3rem;
+    .carousel.has-items { padding: .9rem .9rem 1.2rem; }
+    .carousel-viewport {
+      overflow: hidden; border-radius: 22px;
     }
-    .photo {
-      position: relative; overflow: hidden; border-radius: 24px; aspect-ratio: 3 / 4;
-      background: rgba(255, 255, 255, 0.08); border: 1px solid var(--line); cursor: zoom-in;
-      transform: translateY(24px); opacity: 0; animation: reveal .65s ease forwards;
+    .carousel-track {
+      display: flex; gap: 1rem; transition: transform .55s cubic-bezier(.2,.8,.2,1);
+      will-change: transform;
     }
-    .photo img {
+    .slide {
+      flex: 0 0 clamp(220px, 30vw, 330px);
+      position: relative; border-radius: 22px; overflow: hidden;
+      aspect-ratio: 3 / 4; background: rgba(255,255,255,.08); border: 1px solid var(--line);
+      cursor: zoom-in; user-select: none;
+    }
+    .slide img {
       width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform .45s ease, filter .45s ease;
+      pointer-events: none;
     }
-    .photo:hover img { transform: scale(1.06); filter: saturate(1.08); }
-    .photo figcaption {
+    .slide figcaption {
       position: absolute; inset: auto 0 0 0; padding: 1rem; color: #fff; font-weight: 600;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,.72)); opacity: 0; transition: opacity .2s ease;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.72));
     }
-    .photo:hover figcaption { opacity: 1; }
+    .slide:hover img { transform: scale(1.03); filter: saturate(1.06); transition: .35s ease; }
+
+    .carousel-controls {
+      display: flex; align-items: center; justify-content: center; gap: .8rem; margin-top: 1rem; flex-wrap: wrap;
+    }
+    .carousel-nav {
+      width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.10); color: var(--text); cursor: pointer; font-size: 1.35rem;
+      transition: .2s ease;
+    }
+    .carousel-nav:hover { background: rgba(255,255,255,.18); transform: translateY(-1px); }
+
+    .dots { display: flex; gap: .45rem; align-items: center; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 999px; border: 0; cursor: pointer;
+      background: rgba(255,255,255,.28); transition: .2s ease;
+    }
+    .dot.is-active { width: 26px; background: var(--gold); }
 
     .empty {
-      grid-column: 1 / -1; padding: 3rem; text-align: center; border-radius: 24px;
+      padding: 2.6rem 1.8rem; text-align: center; border-radius: 24px;
       background: rgba(255,255,255,.08); border: 1px dashed var(--line); color: var(--muted);
     }
     .empty strong { display: block; color: var(--text); font-size: 1.35rem; margin-bottom: .5rem; }
 
-    @keyframes reveal { to { transform: none; opacity: 1; } }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
 
     .lightbox {
       position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 2rem;
@@ -237,18 +262,28 @@
       <div class="gallery-shell">
         <div class="section-head">
           <div>
-            <h2>Галерея</h2>
+            <h2>Карусель воспоминаний</h2>
             <p>
-              Просто загрузи фотографии в папку <code>images</code> репозитория — они появятся здесь
-              автоматически, в любом имени и формате.
+              Все фотографии автоматически подхватываются из папки <code>images</code>. Карусель крутится
+              сама по себе, но её можно перетаскивать мышью, листать стрелками и листать вручную.
             </p>
           </div>
           <div class="count-pill" id="photoCount">0 фото</div>
         </div>
-        <div class="gallery" id="gallery">
-          <div class="empty" id="loadingState">
-            <strong>Загружаю фотографии…</strong>
-            Если их ещё нет в репозитории, здесь появится аккуратная заглушка.
+
+        <div class="carousel" id="carousel">
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="carouselTrack">
+              <div class="empty">
+                <strong>Загружаю фотографии…</strong>
+                Если их ещё нет в репозитории, тут появится аккуратная заглушка.
+              </div>
+            </div>
+          </div>
+          <div class="carousel-controls">
+            <button type="button" class="carousel-nav" id="prevBtn" aria-label="Предыдущее фото">‹</button>
+            <div class="dots" id="dots"></div>
+            <button type="button" class="carousel-nav" id="nextBtn" aria-label="Следующее фото">›</button>
           </div>
         </div>
       </div>
@@ -268,7 +303,10 @@
     const IMAGE_EXTENSIONS = /\.(jpe?g|png|gif|webp|avif|svg|bmp|tiff?)$/i;
     const REPO = "vld-prod/welcome-daniel";
     const BRANCH = "main";
-    const gallery = document.getElementById("gallery");
+    const carouselTrack = document.getElementById("carouselTrack");
+    const dots = document.getElementById("dots");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
     const countPill = document.getElementById("photoCount");
     const lightbox = document.getElementById("lightbox");
     const lightboxImage = document.getElementById("lightboxImage");
@@ -288,40 +326,62 @@
         .trim();
     }
 
-    function renderImages(items) {
-      gallery.innerHTML = "";
+    let carouselItems = [];
+    let currentIndex = 0;
+    let autoplayTimer = null;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartScroll = 0;
+
+    function renderCarousel(items) {
+      carouselTrack.innerHTML = "";
+      dots.innerHTML = "";
+      carouselTrack.closest(".carousel").classList.toggle("has-items", items.length > 0);
+
       if (!items.length) {
-        gallery.innerHTML = `
+        carouselTrack.innerHTML = `
           <div class="empty">
             <strong>Фотографий пока нет</strong>
             Добавь файлы в папку <code>images</code> репозитория, и они появятся здесь автоматически.
           </div>
         `;
         countPill.textContent = "0 фото";
+        stopAutoplay();
         return;
       }
 
-      countPill.textContent = `${items.length} ${items.length === 1 ? "фото" : (items.length < 5 ? "фото" : "фото")}`;
-
       items.forEach((item, index) => {
-        const figure = document.createElement("figure");
-        figure.className = "photo";
-        figure.style.animationDelay = `${Math.min(index, 12) * 0.06}s`;
+        const slide = document.createElement("figure");
+        slide.className = "slide";
+        slide.dataset.index = index;
 
         const img = document.createElement("img");
         img.src = item.src;
         img.alt = item.alt || item.name || "Фотография";
-        img.loading = "lazy";
+        img.loading = index < 3 ? "eager" : "lazy";
         img.decoding = "async";
+        img.draggable = false;
 
         const caption = document.createElement("figcaption");
         caption.textContent = makeTitle(item.name) || "Фотография";
 
-        figure.appendChild(img);
-        figure.appendChild(caption);
-        figure.addEventListener("click", () => openLightbox(item.src, caption.textContent));
-        gallery.appendChild(figure);
+        slide.appendChild(img);
+        slide.appendChild(caption);
+        slide.addEventListener("click", () => openLightbox(item.src, caption.textContent));
+        carouselTrack.appendChild(slide);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot";
+        dot.setAttribute("aria-label", `Фото ${index + 1}`);
+        dot.addEventListener("click", () => goTo(index));
+        dots.appendChild(dot);
       });
+
+      countPill.textContent = `${items.length} ${items.length === 1 ? "фото" : "фото"}`;
+      currentIndex = 0;
+      updateCarousel(false);
+      startAutoplay();
     }
 
     function openLightbox(src, alt) {
@@ -376,15 +436,109 @@
         }));
     }
 
+    function slideWidth() {
+      const slide = carouselTrack.querySelector(".slide");
+      if (!slide) return 0;
+      const style = getComputedStyle(carouselTrack);
+      const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
+      return slide.getBoundingClientRect().width + gap;
+    }
+
+    function updateCarousel(smooth = true) {
+      const slides = Array.from(carouselTrack.querySelectorAll(".slide"));
+      if (!slides.length) return;
+      const target = currentIndex * slideWidth();
+      carouselTrack.style.transition = smooth
+        ? "transform .55s cubic-bezier(.2,.8,.2,1)"
+        : "none";
+      carouselTrack.style.transform = `translateX(-${target}px)`;
+      dots.querySelectorAll(".dot").forEach((dot, index) => {
+        dot.classList.toggle("is-active", index === currentIndex);
+      });
+    }
+
+    function goTo(index) {
+      const slides = carouselTrack.querySelectorAll(".slide");
+      if (!slides.length) return;
+      currentIndex = (index + slides.length) % slides.length;
+      updateCarousel(true);
+    }
+
+    function next() { goTo(currentIndex + 1); }
+    function prev() { goTo(currentIndex - 1); }
+
+    function startAutoplay() {
+      stopAutoplay();
+      if (carouselTrack.querySelectorAll(".slide").length < 2) return;
+      autoplayTimer = setInterval(() => {
+        if (!isDragging) next();
+      }, 2800);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    prevBtn?.addEventListener("click", () => {
+      stopAutoplay();
+      prev();
+      startAutoplay();
+    });
+    nextBtn?.addEventListener("click", () => {
+      stopAutoplay();
+      next();
+      startAutoplay();
+    });
+
+    const carousel = document.getElementById("carousel");
+    carousel?.addEventListener("mouseenter", stopAutoplay);
+    carousel?.addEventListener("mouseleave", startAutoplay);
+    carousel?.addEventListener("touchstart", stopAutoplay, { passive: true });
+    carousel?.addEventListener("touchend", startAutoplay, { passive: true });
+
+    // Mouse drag
+    carouselTrack.addEventListener("mousedown", (event) => {
+      if (!carouselTrack.querySelector(".slide")) return;
+      isDragging = true;
+      dragStartX = event.clientX;
+      dragStartScroll = currentIndex * slideWidth();
+      carouselTrack.style.transition = "none";
+      carouselTrack.style.cursor = "grabbing";
+      event.preventDefault();
+    });
+
+    window.addEventListener("mousemove", (event) => {
+      if (!isDragging) return;
+      const delta = dragStartX - event.clientX;
+      carouselTrack.style.transform = `translateX(-${dragStartScroll + delta}px)`;
+    });
+
+    window.addEventListener("mouseup", (event) => {
+      if (!isDragging) return;
+      const delta = dragStartX - event.clientX;
+      isDragging = false;
+      carouselTrack.style.cursor = "grab";
+      if (Math.abs(delta) > slideWidth() / 4) {
+        currentIndex += delta > 0 ? 1 : -1;
+      }
+      goTo(currentIndex);
+      startAutoplay();
+    });
+
+    window.addEventListener("resize", () => updateCarousel(false));
+
     async function loadImages() {
       try {
         let items = await loadFromManifest();
         if (!items) items = await loadFromGitHubApi();
         if (!items) items = [];
-        renderImages(items);
+        renderCarousel(items);
       } catch (error) {
         console.error(error);
-        gallery.innerHTML = `
+        carouselTrack.innerHTML = `
           <div class="empty">
             <strong>Не удалось загрузить фотографии</strong>
             Проверь, что они лежат в папке <code>images</code> репозитория, и обнови страницу.
