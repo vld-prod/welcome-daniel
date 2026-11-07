@@ -149,10 +149,10 @@
     }
     .carousel.has-items { padding: .9rem .9rem 1.2rem; }
     .carousel-viewport {
-      overflow: hidden; border-radius: 22px;
+      overflow: hidden; border-radius: 22px; touch-action: pan-y;
     }
     .carousel-track {
-      position: relative; display: flex; gap: 1rem; transition: transform .55s cubic-bezier(.2,.8,.2,1);
+      position: relative; display: flex; gap: 0; transition: transform .55s cubic-bezier(.2,.8,.2,1);
       will-change: transform;
     }
     .slide {
@@ -466,12 +466,12 @@
     function updateCarousel(smooth = true) {
       const slides = Array.from(carouselTrack.querySelectorAll(".slide"));
       if (!slides.length) return;
-      const { width, stride, viewport } = slideMetrics();
-      const centered = (viewport - width) / 2 - currentIndex * stride;
+      const { width, stride } = slideMetrics();
+      const target = currentIndex * stride;
       carouselTrack.style.transition = smooth
         ? "transform .55s cubic-bezier(.2,.8,.2,1)"
         : "none";
-      carouselTrack.style.transform = `translateX(${centered}px)`;
+      carouselTrack.style.transform = `translateX(-${target}px)`;
       dots.querySelectorAll(".dot").forEach((dot, index) => {
         dot.classList.toggle("is-active", index === currentIndex);
       });
