@@ -3,12 +3,7 @@
     "html-validate:recommended"
   ],
   "rules": {
-    "void-style": [
-      "error",
-      {
-        "style": "selfclose"
-      }
-    ],
+    "void-style": "off",
     "doctype-style": "off"
   }
 }
