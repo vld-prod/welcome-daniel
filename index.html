@@ -369,22 +369,7 @@
         pointer-events: none;
         margin: auto;
       }
-      .slide figcaption {
-        position: absolute;
-        inset: auto 0 0 0;
-        padding: 1rem;
-        color: #fff;
-        font-weight: 600;
-        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
-      }
-      .slide figcaption {
-        position: absolute;
-        inset: auto 0 0 0;
-        padding: 1rem;
-        color: #fff;
-        font-weight: 600;
-        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
-      }
+
       .slide:hover img {
         transform: scale(1.03);
         filter: saturate(1.06);
@@ -733,14 +718,8 @@
           img.decoding = "async";
           img.draggable = false;
 
-          const caption = document.createElement("figcaption");
-          caption.textContent = makeTitle(item.name) || "Фотография";
-
           slide.appendChild(img);
-          slide.appendChild(caption);
-          slide.addEventListener("click", () =>
-            openLightbox(item.src, caption.textContent),
-          );
+          slide.addEventListener("click", () => openLightbox(item.src, makeTitle(item.name) || "Фотография"));
           carouselTrack.appendChild(slide);
 
           const dot = document.createElement("button");
