@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta
@@ -9,9 +9,9 @@
     <meta name="theme-color" content="#0b0d10" />
     <meta
       name="description"
-      content="Даниил Рябовол — карточка навыков, фотографии и контакты."
+      content="Profilkarte von Daniil Riabovol: Fähigkeiten, Fotogalerie und Kontakte."
     />
-    <title>Даниил Рябовол</title>
+    <title>Daniil Riabovol</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -80,15 +80,6 @@
         letter-spacing: -0.035em;
       }
 
-      .name-secondary {
-        margin: 0;
-        color: var(--muted);
-        font-size: clamp(1rem, 2vw, 1.35rem);
-        font-weight: 600;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
       .role-line {
         margin-top: 1rem;
         color: var(--accent);
@@ -153,6 +144,7 @@
         display: block;
         border-radius: 12px;
         pointer-events: none;
+        margin: auto;
       }
 
       .carousel-controls {
@@ -260,7 +252,7 @@
       }
 
       .section-label {
-        margin: 0 0 1.1rem;
+        margin: 0 0 1.05rem;
         color: var(--muted);
         font-size: 0.75rem;
         font-weight: 800;
@@ -270,8 +262,8 @@
 
       .skill-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.25rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.15rem;
       }
 
       .skill-item {
@@ -283,7 +275,7 @@
 
       .skill-item h3 {
         margin: 0 0 0.65rem;
-        font-size: 1.1rem;
+        font-size: 1.08rem;
         color: var(--text);
       }
 
@@ -327,10 +319,36 @@
         display: grid;
         place-items: center;
         border-radius: 12px;
-        background: var(--accent-soft);
-        color: var(--accent);
-        font-weight: 800;
+        color: #fff;
         flex: 0 0 auto;
+      }
+
+      .social-icon.telegram {
+        background: #229ed9;
+      }
+
+      .social-icon.instagram {
+        background: linear-gradient(
+          45deg,
+          #f09433,
+          #e6683c,
+          #dc2743,
+          #cc2366,
+          #bc1888
+        );
+      }
+
+      .social-icon.tiktok {
+        background: #000000;
+        box-shadow:
+          inset -2px -2px 0 #fe2c55,
+          inset 2px 2px 0 #25f4ee;
+      }
+
+      .social-icon svg {
+        width: 20px;
+        height: 20px;
+        display: block;
       }
 
       .social-card strong {
@@ -361,33 +379,34 @@
         }
 
         .carousel-viewport {
-          min-height: 260px;
+          min-height: 300px;
         }
       }
 
       @media (max-width: 480px) {
         .carousel-viewport {
-          min-height: 230px;
+          min-height: 240px;
         }
       }
     </style>
   </head>
   <body>
-    <div class="page">
+    <main class="page">
       <header class="identity">
         <div>
-          <h1>Даниил Рябовол</h1>
+          <h1>Daniil Riabovol</h1>
           <p class="name-secondary">Daniil Riabovol</p>
         </div>
-        <div class="role-line">Готовка · Выпечка · Немецкий B2</div>
+        <div class="role-line">Kochen · Backen · Deutsch B2</div>
       </header>
 
-      <section class="carousel" aria-label="Галерея фотографий Даниила">
+      <section class="carousel" aria-label="Fotogalerie von Daniil">
         <div class="carousel-viewport">
           <div class="carousel-track" id="carouselTrack">
             <div class="empty">
-              <strong>Загружаю фотографии…</strong>
-              Если их ещё нет в репозитории, они появятся автоматически.
+              <strong>Fotos werden geladen…</strong>
+              Falls sie noch nicht im Repository liegen, erscheinen sie
+              automatisch.
             </div>
           </div>
         </div>
@@ -396,7 +415,7 @@
             type="button"
             class="carousel-nav"
             id="prevBtn"
-            aria-label="Предыдущая фотография"
+            aria-label="Vorheriges Foto"
           >
             ‹
           </button>
@@ -405,7 +424,7 @@
             type="button"
             class="carousel-nav"
             id="nextBtn"
-            aria-label="Следующая фотография"
+            aria-label="Nächstes Foto"
           >
             ›
           </button>
@@ -413,54 +432,61 @@
       </section>
 
       <section class="section">
-        <p class="section-label">Навыки</p>
+        <p class="section-label">Fähigkeiten</p>
         <div class="skill-grid">
           <article class="skill-item">
-            <h3>Готовка</h3>
+            <h3>Kochen</h3>
             <p>
-              <strong>Отличные навыки готовки и печки.</strong> Умеет уверенно
-              работать с разными ингредиентами, контролировать температуру,
-              подбирать вкусовые сочетания и грамотно выстраивать процесс от
-              preparation до подачи. Может приготовить как повседневные блюда,
-              так и более сложные, техничные рецепты — с пониманием текстуры,
-              времени resting/прогрева и баланса соли, кислоты, жира и
-              ароматики. Хорошо ориентируется на кухне, умеет сохранять порядок,
-              экономить время и доводить блюдо до стабильно хорошего результата
-              для себя, семьи или компании гостей.
+              <strong>Sehr gute Fähigkeiten im Kochen.</strong> Daniil arbeitet
+              sicher mit unterschiedlichen Zutaten, kontrolliert Temperaturen,
+              balanciert Geschmackskomponenten aus und strukturiert den gesamten
+              Prozess von der Vorbereitung bis zum Anrichten. Er kann sowohl
+              alltägliche Gerichte als auch komplexere, technisch anspruchsvolle
+              Rezepte zubereiten und versteht Textur, Garzeiten, Ruhezeiten
+              sowie die Balance aus Salz, Säure, Fett und Aromatik. In der Küche
+              bleibt er konzentriert, hält Ordnung, nutzt die Zeit effizient und
+              liefert ein zuverlässig gutes Ergebnis für sich, die Familie oder
+              eine Gesellschaft von Gästen.
             </p>
           </article>
           <article class="skill-item">
-            <h3>Выпечка</h3>
+            <h3>Backen</h3>
             <p>
-              Владеет выпечкой и тестом: понимает основы дрожжевого, слоёного,
-              песочного и бисквитного теста, может готовить хлеб, пироги,
-              печенье, маффины, рулеты и десерты. Умеет рассчитывать пропорции,
-              соблюдать время замеса/расстойки, работать с температурой духовки
-              и оценивать степень готовности по виду, аромату и структуре. Может
-              аккуратно работать с декором, кремами, начинками и подачей,
-              создавая выпечку, которая не только вкусная, но и визуально
-              красивая.
+              <strong
+                >Sicheres Backen mit tiefem Verständnis für Teige, Prozesse und
+                Ergebnis.</strong
+              >
+              Daniil kennt die Grundlagen von Hefe-, Blätter-, Mürbe-, Biskuit-
+              und anderem Teig und kann Brot, Kuchen, Kekse, Muffins, Rollen und
+              Desserts zuverlässig zubereiten. Er kann Zutatenmengen abstimmen,
+              Knet- und Ruhezeiten einhalten, Ofentemperaturen sinnvoll steuern
+              und den Gargrad anhand von Farbe, Struktur, Aroma und Kruste
+              beurteilen. Zudem achtet er auf genaue Ausführung, saubere
+              Dekoration, Füllungen und ansprechende Präsentation — so entsteht
+              Backwerk, das nicht nur schmeckt, sondern auch handwerklich
+              überzeugt.
             </p>
           </article>
           <article class="skill-item">
-            <h3>Немецкий язык</h3>
+            <h3>Deutsch – B2</h3>
             <p>
-              <strong>Владение немецким на уровне B2.</strong> Это уверенный
-              рабочий и повседневный уровень: умеет поддерживать живые
-              разговоры, обсуждать рабочие задачи, объяснять процессы, задавать
-              вопросы, вести переписку и понимать устную речь в реальных
-              ситуациях. Способен читать инструкции, сообщения, простые
-              профессиональные материалы, обсуждать бытовые и кулинарные темы,
-              уточнять детали и корректно реагировать в общении. На этом уровне
-              немецкий — уже не просто учебный язык, а инструмент для
-              повседневной коммуникации и уверенного взаимодействия.
+              <strong>Deutsche Sprachkenntnisse auf Niveau B2.</strong> Das
+              bedeutet sichere Kommunikation in Alltag und Beruf: Aufgaben
+              besprechen, Rückfragen stellen, Arbeitsabläufe erklären,
+              Anleitungen und Nachrichten verstehen, per E-Mail oder Messenger
+              schreiben und konkrete Themen klar vermitteln. Daniil kann
+              Gespräche aufrechterhalten, Details nachfragen, Feedback geben und
+              typische berufliche sowie alltägliche Situationen zuverlässig
+              meistern. Deutsch ist für ihn kein reiner Lerngegenstand, sondern
+              ein praktisches Werkzeug für Kommunikation, Orientierung und
+              Zusammenarbeit.
             </p>
           </article>
         </div>
       </section>
 
       <section class="section">
-        <p class="section-label">Соцсети</p>
+        <p class="section-label">Soziale Netzwerke</p>
         <div class="social-grid">
           <a
             class="social-card"
@@ -468,10 +494,11 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span class="social-icon"
-              ><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg
-            ></span>
+            <span class="social-icon telegram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+              </svg>
+            </span>
             <span>
               <strong>Telegram</strong>
               <span>t.me/StaffDanik</span>
@@ -483,18 +510,19 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span class="social-icon"
-              ><svg
+            <span class="social-icon instagram">
+              <svg
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                stroke="#fff"
                 stroke-width="2"
                 aria-hidden="true"
               >
                 <rect x="2" y="2" width="20" height="20" rx="5"></rect>
                 <circle cx="12" cy="12" r="4"></circle>
-                <circle cx="17.5" cy="6.5" r="1"></circle></svg
-            ></span>
+                <circle cx="17.5" cy="6.5" r="1"></circle>
+              </svg>
+            </span>
             <span>
               <strong>Instagram</strong>
               <span>@staff_daniks_</span>
@@ -506,12 +534,13 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span class="social-icon"
-              ><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <span class="social-icon tiktok">
+              <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
                 <path
                   d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.3-4.64 2.93 2.93 0 0 1 .88.13V9.44a6.4 6.4 0 0 0-1-.08A6.34 6.34 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V9a8.18 8.18 0 0 0 4.77 1.52V7.13a4.86 4.86 0 0 1-1.04-.44z"
-                ></path></svg
-            ></span>
+                ></path>
+              </svg>
+            </span>
             <span>
               <strong>TikTok</strong>
               <span>@danikstaff</span>
@@ -520,8 +549,10 @@
         </div>
       </section>
 
-      <footer class="footer">Карточка Даниила Рябовол · GitHub Pages</footer>
-    </div>
+      <footer class="footer">
+        Profilkarte von Daniil Riabovol · GitHub Pages
+      </footer>
+    </main>
 
     <script>
       const IMAGE_EXTENSIONS = /\.(jpe?g|png|gif|webp|avif|svg|bmp|tiff?)$/i;
@@ -552,8 +583,8 @@
         if (!items.length) {
           carouselTrack.innerHTML = `
           <div class="empty">
-            <strong>Фотографий пока нет</strong>
-            Добавь файлы в папку <code>images</code>, и они появятся автоматически.
+            <strong>Noch keine Fotos</strong>
+            Füge Dateien in den Ordner <code>images</code> ein, und sie erscheinen automatisch.
           </div>
         `;
           return;
@@ -566,7 +597,7 @@
 
           const img = document.createElement("img");
           img.src = item.src;
-          img.alt = item.alt || item.name || "Фотография Даниила";
+          img.alt = item.alt || item.name || "Foto von Daniil";
           img.loading = index < 3 ? "eager" : "lazy";
           img.decoding = "async";
           img.draggable = false;
@@ -579,7 +610,7 @@
           const dot = document.createElement("button");
           dot.type = "button";
           dot.className = "dot";
-          dot.setAttribute("aria-label", `Фото ${index + 1}`);
+          dot.setAttribute("aria-label", `Foto ${index + 1}`);
           dot.addEventListener("click", () => goTo(index));
           dots.appendChild(dot);
         });
@@ -726,13 +757,10 @@
           renderCarousel(items);
         } catch (error) {
           console.error(error);
-          document.title =
-            "LOADERR: " + (error && error.message ? error.message : error);
           carouselTrack.innerHTML = `
           <div class="empty">
-            <strong>Не удалось загрузить фотографии</strong>
-            <span style="display:block; margin-top:.5rem; font-size:.9rem; overflow-wrap:anywhere;">${error && error.message ? error.message : error}</span>
-            Проверь, что они лежат в папке <code>images</code>, и обнови страницу.
+            <strong>Fotos konnten nicht geladen werden</strong>
+            Prüfe, ob sie im Ordner <code>images</code> liegen, und lade die Seite neu.
           </div>
         `;
         }
