@@ -152,7 +152,7 @@
       overflow: hidden; border-radius: 22px;
     }
     .carousel-track {
-      display: flex; gap: 1rem; transition: transform .55s cubic-bezier(.2,.8,.2,1);
+      position: relative; display: flex; gap: 1rem; transition: transform .55s cubic-bezier(.2,.8,.2,1);
       will-change: transform;
     }
     .slide {
@@ -338,6 +338,7 @@
     let isDragging = false;
     let dragStartX = 0;
     let dragStartScroll = 0;
+    let dragStartTransform = 0;
 
     function renderCarousel(items) {
       carouselTrack.innerHTML = "";
@@ -442,22 +443,30 @@
         }));
     }
 
-    function slideWidth() {
+    function slideMetrics() {
       const slide = carouselTrack.querySelector(".slide");
-      if (!slide) return 0;
+      if (!slide) return { width: 0, gap: 0, stride: 0, viewport: 0 };
       const style = getComputedStyle(carouselTrack);
       const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
-      return slide.getBoundingClientRect().width + gap;
+      const width = slide.getBoundingClientRect().width;
+      const viewport = carouselTrack.parentElement.getBoundingClientRect().width;
+      return { width, gap, stride: width + gap, viewport };
+    }
+
+    function currentTranslate() {
+      const match = carouselTrack.style.transform.match(/translateX\((-?[\d.]+)px\)/);
+      return match ? Number(match[1]) : 0;
     }
 
     function updateCarousel(smooth = true) {
       const slides = Array.from(carouselTrack.querySelectorAll(".slide"));
       if (!slides.length) return;
-      const target = currentIndex * slideWidth();
+      const { width, stride, viewport } = slideMetrics();
+      const centered = (viewport - width) / 2 - currentIndex * stride;
       carouselTrack.style.transition = smooth
         ? "transform .55s cubic-bezier(.2,.8,.2,1)"
         : "none";
-      carouselTrack.style.transform = `translateX(-${target}px)`;
+      carouselTrack.style.transform = `translateX(${centered}px)`;
       dots.querySelectorAll(".dot").forEach((dot, index) => {
         dot.classList.toggle("is-active", index === currentIndex);
       });
@@ -510,7 +519,7 @@
       if (!carouselTrack.querySelector(".slide")) return;
       isDragging = true;
       dragStartX = event.clientX;
-      dragStartScroll = currentIndex * slideWidth();
+      dragStartTransform = currentTranslate();
       carouselTrack.style.transition = "none";
       carouselTrack.style.cursor = "grabbing";
       event.preventDefault();
@@ -518,17 +527,18 @@
 
     window.addEventListener("mousemove", (event) => {
       if (!isDragging) return;
-      const delta = dragStartX - event.clientX;
-      carouselTrack.style.transform = `translateX(-${dragStartScroll + delta}px)`;
+      const delta = event.clientX - dragStartX;
+      carouselTrack.style.transform = `translateX(${dragStartTransform + delta}px)`;
     });
 
     window.addEventListener("mouseup", (event) => {
       if (!isDragging) return;
-      const delta = dragStartX - event.clientX;
+      const delta = event.clientX - dragStartX;
       isDragging = false;
       carouselTrack.style.cursor = "grab";
-      if (Math.abs(delta) > slideWidth() / 4) {
-        currentIndex += delta > 0 ? 1 : -1;
+      const { stride } = slideMetrics();
+      if (stride && Math.abs(delta) > stride / 4) {
+        currentIndex += delta < 0 ? 1 : -1;
       }
       goTo(currentIndex);
       startAutoplay();
