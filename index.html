@@ -741,6 +741,7 @@
           carouselTrack.innerHTML = `
           <div class="empty">
             <strong>Не удалось загрузить фотографии</strong>
+            <span style="display:block; margin-top:.5rem; font-size:.9rem; overflow-wrap:anywhere;">${error && error.message ? error.message : error}</span>
             Проверь, что они лежат в папке <code>images</code>, и обнови страницу.
           </div>
         `;
